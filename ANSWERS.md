@@ -1,8 +1,8 @@
 # Midterm 1: answers
 
 GitHub username: aruzhankabdrassol-jpg
-Session code: PRACTICE
-Fingerprint: d713e2d0
+Session code: KETTLE-62
+Fingerprint: e85a766f
 
 > Fill in the three lines above from `my_data/DATA.md`. Do not rename headings or table columns: a script reads the numbers.
 > Write only in the empty cells and lines. Percentages as 0.78 or 78 %, money as plain numbers.
@@ -15,45 +15,44 @@ I used Claude and Google Colab.
 - Colab:It was used for dataset generation and data processing. I ran the data generator and the analysis code on my own dataset.
 
 I studied the assignment and the heading on my own, and developed the solution logic.I did not share my data or answers with other students.
-
 ## Part 1: Retrieval and cost decision
 
 ### 1a. Metrics (all 60 questions)
 
 | config | recall@1 | recall@3 | recall@5 | MRR@10 |
 |---|---|---|---|---|
-| A | 0.650 | 0.733 | 0.800 | 0.701 |
-| B | 0.350 | 0.533 | 0.617 | 0.441 |
+| A | 0.467 | 0.533 | 0.633 | 0.523 |
+| B | 0.400 | 0.533 | 0.783 | 0.523 |
 
 ### 1b. Recall and 95 % Wilson interval of each candidate (recall at its own k)
 
 | candidate | recall@k | lower | upper |
 |---|---|---|---|
-| A, k=3 | 0.733 | 0.610 | 0.829 |
-| A, k=5 | 0.800 | 0.682 | 0.882 |
+| A, k=3 | 0.533 | 0.409 | 0.654 |
+| A, k=5 | 0.633 | 0.507 | 0.744 |
 | B, k=3 | 0.533 | 0.409 | 0.654 |
-| B, k=5 | 0.617 | 0.490 | 0.729 |
+| B, k=5 | 0.783 | 0.664 | 0.869 |
 
-Reading of the intervals: the only pair that does not overlap is (A,5) vs (B,3) (0.654 < 0.682), so (A,5) is shown to be better than (B,3). All other pairs overlap, including (A,5) vs (B,5) (0.682 < 0.729) and (B,3) vs (B,5), so I claim no winner for them.
+Reading of the intervals: (B,5) does not overlap with (A,3) or (B,3) (their upper end 0.654 < 0.664), so (B,5) is shown to be better than both; the gap is small. (B,5) overlaps with (A,5) (0.664 < 0.744), so no winner between them. (A,3) and (B,3) are identical, and (A,5) overlaps with both of them, so no other winner is claimed.
 
 ### 1c. Annual model cost in USD
 
 | candidate | annual cost |
 |---|---|
-| A, k=3 | 8347.81 |
-| A, k=5 | 10916.24 |
-| B, k=3 | 5745.74 |
-| B, k=5 | 6579.46 |
+| A, k=3 | 19394.38 |
+| A, k=5 | 25484.64 |
+| B, k=3 | 12717.02 |
+| B, k=5 | 14355.71 |
 
 ### 1d. Decision (at most 150 words)
 
 Chosen candidate: B, k=5
 
-Both A candidates exceed the 7500 budget (A,3: 8348; A,5: 10916), so only B fits. The two B candidates' intervals overlap (B,3: 0.409-0.654; B,5: 0.490-0.729), so I do not claim B,5 is better. I choose it because it costs 6579, within budget, and its recall is higher on every language, most for Russian (0.50 vs 0.35). Recall of B,5 per language: EN 14/20 = 0.70, RU 10/20 = 0.50, KK 13/20 = 0.65. Russian is served worst: half of its questions miss the right chunk in the top 5. With 20 questions per language these figures are rough (RU interval about 0.30-0.70). A does not clearly beat B at equal k (intervals overlap), so the budget costs little proven accuracy.
+Three candidates fit the budget of 22400: A,3 (19394), B,3 (12717) and B,5 (14356); A,5 costs 25485 and is out. B,5 has the highest recall, 47/60 = 0.783 (CI 0.664-0.869). Its interval does not overlap with A,3 or B,3 (both 0.409-0.654; the gap is small, 0.654 vs 0.664), so it is shown to be better than both, and it is cheaper than A,3. It overlaps with A,5 (0.507-0.744), but A,5 is unaffordable anyway. Recall of B,5 per language: EN 16/20 = 0.80, RU 15/20 = 0.75, KK 16/20 = 0.80. Russian is served worst, but the gap is one question and n = 20 per language, so no language is shown to be worse.
 
 ### 1e. Next measurement (at most 60 words)
 
-Run 100 additional Russian test questions through B,5 and A,3 (120 Russian questions in total). The Russian interval would shrink from about +-20 to +-9 points, showing whether B,5 really lags behind A,3; if A is clearly better, ask finance for the extra 848 a year.
+Add 60 more test questions (20 per language) and re-run B,5, B,3 and A,3. B,5's lead over them rests on a 0.01 gap between intervals; with 120 questions the intervals narrow from about +-0.10 to +-0.07, which confirms or overturns the choice and shows whether Russian really lags.
 
 ## Part 2: A document pipeline you can defend
 
@@ -61,48 +60,48 @@ Run 100 additional Russian test questions through B,5 and A,3 (120 Russian quest
 
 | pipeline | overall accuracy | weakest cell (language, condition) | accuracy there | lower | upper | annual cost |
 |---|---|---|---|---|---|---|
-| H | 0.894 | KK, degraded | 0.833 | 0.664 | 0.927 | 15740.63 |
-| L | 0.850 | KK, degraded | 0.700 | 0.521 | 0.833 | 7200 |
+| H | 0.883 | RU, degraded | 0.767 | 0.591 | 0.882 | 42969.63 |
+| L | 0.861 | RU, degraded | 0.767 | 0.591 | 0.882 | 27000 |
 
-Personal-data pages per year sent abroad under H: 620500
+Personal-data pages per year sent abroad under H: 372300
 
 ### 2b. Memo (at most 300 words)
 
-**Recommendation: choose pipeline L (own server in Kazakhstan), with human review of weak cells.**
+**Recommendation: choose pipeline L (own server in Kazakhstan), with human review of degraded scans.**
 
-**Accuracy.** On 180 test invoices each, H got 161 right (89.4 %, 95 % CI 84.1-93.1 %) and L 153 (85.0 %, CI 79.1-89.5 %). The intervals overlap, so the data do not show H is better overall. That overall figure hides the worst-served group: Kazakh degraded scans in both pipelines. L: 21/30 = 70.0 % (CI 52.1-83.3 %). H: 25/30 = 83.3 % (CI 66.4-92.7 %). These also overlap, and 30 documents per cell is little evidence; L's true rate could be near 50 %.
+**Accuracy.** On 180 test invoices each, H got 159 right (0.883, 95 % CI 0.828-0.922) and L 155 (0.861, CI 0.803-0.904). The intervals overlap, so the data do not show H is better. The overall figure hides the worst-served group: degraded Russian scans, 23/30 = 0.767 (CI 0.591-0.882) in both pipelines. More generally, degraded scans reach only 0.81 (H) and 0.80 (L), against 0.96 and 0.92 for clean ones. With 30 documents per cell, the true rate in the worst cell could be near 0.6.
 
-**Personal data.** 34 % of 5,000 pages/day carry a name and ИИН: 620,500 pages a year. Lecture 5.1 questions:
+**Personal data.** 12 % of 8,500 pages/day carry a name and ИИН: 372,300 pages a year. Lecture 5.1 questions:
 - H: where does the scan go? A data centre abroad (known). Who stores it? The vendor (unknown). For how long? Unknown. We must obtain written terms; a vendor's statement is not a compliance review under Law No. 94-V.
 - L: our own server in Kazakhstan (known), stored by us (known), retention period not yet set: we must define it.
 
-**Safeguards anyone can verify:** (1) block outbound internet from the L server; check firewall logs; (2) automatic deletion of scans after a fixed period, with a deletion log; (3) send every degraded Kazakh and Russian scan to manual check, reporting error rates weekly; (4) log and audit access to ИИН fields.
+**Safeguards anyone can verify:** (1) block outbound internet from the L server; check firewall logs; (2) automatic deletion of scans after a fixed period, with a deletion log; (3) send every degraded scan to manual check, reporting error rates weekly; (4) log and audit access to ИИН fields.
 
-**Choice.** L costs 7,200 a year against about 15,741 for H, and keeps all 620,500 pages in the country, with no proven accuracy loss. Residual risk: errors on degraded Kazakh scans remain; review reduces but does not remove them. We should test 200 more degraded Kazakh scans.
+**Choice.** L costs 27,000 a year against about 42,970 for H, and keeps all 372,300 pages in the country, with no proven accuracy loss. Residual risk: errors on degraded Russian scans remain; review reduces but does not remove them. We should test 200 more degraded Russian scans.
 
 ## Part 3: Explain your own numbers
 
 ### Q1
 
-Number: 2.55
-Why (at most 40 words): Outputs cost 6x more per token and grow only 1.73x (inputs 3.00x), so they weigh more in the bill and pull the ratio down from 2.90 (token ratio) to 2.55.
+Number: 0.86
+Why (at most 40 words): Tokens grow 1.96x, bytes 2.28x: the ratio 0.86 is below 1, so most of the premium is already in the UTF-8 bytes (Cyrillic letters take 2 bytes); the tokenizer merges bytes and recovers only 14 %.
 
 ### Q2
 
-Number: 473
-Why (at most 40 words): The chunk is 526 e5 tokens, but e5-small reads only 512, so the last 14 are cut silently. The sentence ends before about 493, inside the limit, so a matching question can retrieve the chunk. No error appears.
+Number: 44.4 %
+Why (at most 40 words): Only English is cut: 920.5 e5 tokens vs the 512 limit; RU (448) and KK (266) fit. The cut 44.4 % is silently dropped, never embedded, so questions about it cannot retrieve the chunk, and no error appears.
 
 ### Q3
 
-Number: 69.0 %
-Why (at most 40 words): Top-p cuts the tail (here Monday+Friday reach 84.5 % >= 0.8) and renormalises, discarding unlikely tokens entirely; lower temperature only sharpens all probabilities, keeping every token possible.
+Number: 73.7 %
+Why (at most 40 words): Top-p keeps the smallest set whose probabilities reach 0.9: Monday+Friday give only 89.6 %, so Sunday is also kept; the rest is cut and renormalised. Lower temperature instead sharpens all probabilities, leaving every token possible.
 
 ### Q4
 
-Number: 31.1 %
-Why (at most 40 words): I kept only birthdays and account numbers: arbitrary facts with no rule, where the once-seen share bounds errors. I left out multiplication and sequences: they follow rules. A prompt adds no knowledge, so the bound stays.
+Number: 19.2 %
+Why (at most 40 words): I kept account numbers and birthdays: arbitrary facts with no rule, where the once-seen share bounds errors. I left out arithmetic sequences and multiplication: they follow learnable rules. A prompt adds no knowledge, so the bound stays.
 
 ### Q5
 
-Number: 15.85
-Why (at most 40 words): 317 tokens per parameter against Chinchilla's 20: the model is heavily over-trained relative to compute-optimal. Chinchilla found models like GPT-3 were under-trained: too many parameters for too few tokens.
+Number: 11.90
+Why (at most 40 words): 238 tokens per parameter against Chinchilla's 20: the model is heavily over-trained relative to compute-optimal. Chinchilla found models like GPT-3 under-trained: too many parameters for too few tokens.
